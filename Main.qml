@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import SddmComponents 2.0
+import "components"
 
 Rectangle {
     color: '#000000'
@@ -54,39 +55,10 @@ Rectangle {
             }
         }
 
-        // Session field
-        Column {
-            spacing: 3
-            width: 250
-
-            Repeater {
-                id: sessionSelect
-                model: sessionModel
-                property int selectedIndex: sessionModel.lastIndex
-
-                delegate: Rectangle {
-                    width: 250
-                    height: 30
-                    color: sessionSelect.selectedIndex === index ? "#3a3a3a" : "transparent"
-                    border.color: "#3a3a3a"
-                    border.width: sessionSelect.selectedIndex === index ? 1 : 0
-
-                    Text {
-                        text: name
-                        color: "#ffffff"
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.left: parent.left
-                        anchors.leftMargin: 8
-                        font.pixelSize: 13
-                    }
-
-                    MouseArea {
-                        id: sessionMouse
-                        anchors.fill: parent
-                        onClicked: sessionSelect.selectedIndex = index
-                    }
-                }
-            }
+        // Session selector
+        SessionSelect {
+            id: sessionSelect
+            anchors.horizontalCenter: parent.horizontalCenter
         }
     }
 
