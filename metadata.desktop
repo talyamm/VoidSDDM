@@ -1,0 +1,9 @@
+[SddmGreeterTheme]
+Name=Void
+Description=Very minimal sddm theme.
+Author=Talyam
+Version=1.0
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=void
+QtVersion=6

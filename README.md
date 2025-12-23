@@ -1,0 +1,1 @@
+Very minimal SDDM theme //
