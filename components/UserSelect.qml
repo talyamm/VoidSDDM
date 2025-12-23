@@ -1,0 +1,84 @@
+import QtQuick 2.0
+import SddmComponents 2.0
+
+Row {
+    id: root
+    spacing: 10
+    
+    property int selectedIndex: userModel.lastIndex
+    property string selectedUser: userRepeater.count > 0 ? userRepeater.itemAt(root.selectedIndex).userName : ""
+    
+    // Left arrow button
+    Rectangle {
+        width: 30
+        height: 35
+        color: '#000000'
+
+        Text {
+            text: "<"
+            color: "#c4c4c4"
+            font.pixelSize: 18
+            anchors.centerIn: parent
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                if (root.selectedIndex > 0) {
+                    root.selectedIndex--
+                } else {
+                    root.selectedIndex = userRepeater.count - 1
+                }
+            }
+        }
+    }
+
+    // User name display
+    Rectangle {
+        width: 170
+        height: 35
+        color: '#000000'
+
+        Text {
+            id: userText
+            text: root.selectedUser
+            color: "#c4c4c4"
+            font.pixelSize: 14
+            anchors.centerIn: parent
+        }
+    }
+
+    // Right arrow button
+    Rectangle {
+        width: 30
+        height: 35
+        color: '#000000'
+
+        Text {
+            text: ">"
+            color: "#c4c4c4"
+            font.pixelSize: 18
+            anchors.centerIn: parent
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                if (root.selectedIndex < userRepeater.count - 1) {
+                    root.selectedIndex++
+                } else {
+                    root.selectedIndex = 0
+                }
+            }
+        }
+    }
+    
+    // Hidden repeater to store user data
+    Repeater {
+        id: userRepeater
+        model: userModel
+        delegate: Item {
+            property string userName: name
+        }
+    }
+}
