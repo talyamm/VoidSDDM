@@ -6,18 +6,52 @@ Rectangle {
     id: mainRect
     focus: true
     
-    property string activeSelector: "password" // "password", "user", "session"
+    property string activeSelector: "password" // "password", "user", "session", "power"
+    property int activePowerButton: 0 // 0=shutdown, 1=restart, 2=suspend
+    
+    // Help tips (top left)
+    Text {
+        id: helpTips
+        visible: mainRect.showHelpTips
+        text: "F10 - suspend\nF11 - shutdown\nF12 - restart"
+        color: config.stringValue("helpTipsColor") || "#666666"
+        font.pixelSize: config.intValue("helpTipsFontSize") || 11
+        font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.margins: 20
+    }
     
     // Config properties
     color: config.stringValue("background") || '#000000'
     property int animationDuration: config.intValue("animationDuration") || 200
     property int elementSpacing: config.intValue("elementSpacing") || 15
+    property bool showPreview: config.boolValue("showSelectorPreview") || false
+    property bool showHelpTips: config.boolValue("showHelpTips") || false
+    
+    // User preview text (above password field)
+    Text {
+        id: userPreview
+        text: userSelect.selectedUser
+        color: config.stringValue("selectorPreviewColor") || "#666666"
+        font.pixelSize: config.intValue("selectorPreviewFontSize") || 11
+        font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: passwordField.top
+        anchors.bottomMargin: config.intValue("selectorPreviewMargin") || 10
+        visible: mainRect.showPreview && mainRect.activeSelector !== "user" && userSelect.selectedUser !== ""
+        opacity: visible ? 1 : 0
+        
+        Behavior on opacity {
+            NumberAnimation { duration: mainRect.animationDuration; easing.type: Easing.OutCubic }
+        }
+    }
     
     // User selector
     Item {
         id: userSelectContainer
         width: passwordField.width
-        height: mainRect.activeSelector === "user" ? 35 : 0
+        height: mainRect.activeSelector === "user" ? (config.intValue("selectorHeight") || 35) : 0
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: passwordField.top
         anchors.bottomMargin: mainRect.elementSpacing
@@ -29,7 +63,6 @@ Rectangle {
         
         UserSelect {
             id: userSelect
-            width: parent.width
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             opacity: mainRect.activeSelector === "user" ? 1 : 0
@@ -56,7 +89,7 @@ Rectangle {
     Item {
         id: sessionSelectContainer
         width: passwordField.width
-        height: mainRect.activeSelector === "session" ? 35 : 0
+        height: mainRect.activeSelector === "session" ? (config.intValue("selectorHeight") || 35) : 0
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: passwordField.bottom
         anchors.topMargin: mainRect.elementSpacing
@@ -68,7 +101,6 @@ Rectangle {
         
         SessionSelect {
             id: sessionSelect
-            width: parent.width
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             opacity: mainRect.activeSelector === "session" ? 1 : 0
@@ -80,11 +112,41 @@ Rectangle {
         }
     }
     
+    // Session preview text (below password field)
+    Text {
+        id: sessionPreview
+        text: sessionSelect.selectedSession
+        color: config.stringValue("selectorPreviewColor") || "#666666"
+        font.pixelSize: config.intValue("selectorPreviewFontSize") || 11
+        font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: passwordField.bottom
+        anchors.topMargin: config.intValue("selectorPreviewMargin") || 10
+        visible: mainRect.showPreview && mainRect.activeSelector !== "session" && sessionSelect.selectedSession !== ""
+        opacity: visible ? 1 : 0
+        
+        Behavior on opacity {
+            NumberAnimation { duration: mainRect.animationDuration; easing.type: Easing.OutCubic }
+        }
+    }
+    
     // Power buttons at bottom center
     PowerButtons {
+        id: powerButtons
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 30
+        anchors.bottomMargin: config.intValue("powerButtonBottomMargin") || 30
+        activeButton: mainRect.activeSelector === "power" ? mainRect.activePowerButton : -1
+    }
+    
+    function activatePowerButton() {
+        if (mainRect.activePowerButton === 0) {
+            sddm.powerOff()
+        } else if (mainRect.activePowerButton === 1) {
+            sddm.reboot()
+        } else if (mainRect.activePowerButton === 2) {
+            sddm.suspend()
+        }
     }
     
     function returnToPassword() {
@@ -132,6 +194,17 @@ Rectangle {
                 mainRect.activeSelector = "session"
                 mainRect.focus = true
                 handled = true
+            } else if (mainRect.activeSelector === "session") {
+                // Go to power buttons
+                mainRect.activeSelector = "power"
+                mainRect.activePowerButton = 0
+                mainRect.focus = true
+                handled = true
+            } else if (mainRect.activeSelector === "power") {
+                // Return to session from power
+                mainRect.activeSelector = "session"
+                mainRect.focus = true
+                handled = true
             } else {
                 // Return to password from any selector
                 returnToPassword()
@@ -143,6 +216,10 @@ Rectangle {
                 handled = navigateSelector("user", "left")
             } else if (mainRect.activeSelector === "session") {
                 handled = navigateSelector("session", "left")
+            } else if (mainRect.activeSelector === "power") {
+                // Navigate left in power buttons
+                mainRect.activePowerButton = mainRect.activePowerButton > 0 ? mainRect.activePowerButton - 1 : 2
+                handled = true
             }
         } else if (event.key === Qt.Key_Right) {
             // Navigate right in active selector
@@ -150,6 +227,16 @@ Rectangle {
                 handled = navigateSelector("user", "right")
             } else if (mainRect.activeSelector === "session") {
                 handled = navigateSelector("session", "right")
+            } else if (mainRect.activeSelector === "power") {
+                // Navigate right in power buttons
+                mainRect.activePowerButton = mainRect.activePowerButton < 2 ? mainRect.activePowerButton + 1 : 0
+                handled = true
+            }
+        } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+            // Activate power button
+            if (mainRect.activeSelector === "power") {
+                activatePowerButton()
+                handled = true
             }
         }
         
@@ -160,5 +247,16 @@ Rectangle {
     
     Component.onCompleted: {
         passwordField.passwordInput.focus = true
+    }
+    
+    // Hide cursor if configured
+    Loader {
+        active: config.boolValue("showCursor") === false
+        anchors.fill: parent
+        sourceComponent: MouseArea {
+            enabled: false
+            cursorShape: Qt.BlankCursor
+            acceptedButtons: Qt.NoButton
+        }
     }
 }

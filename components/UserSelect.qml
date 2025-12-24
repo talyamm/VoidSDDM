@@ -9,10 +9,18 @@ Row {
     
     spacing: config.intValue("selectorSpacing") || 10
     
+    property int selectorHeight: config.intValue("selectorHeight") || 35
+    property int arrowWidth: config.intValue("selectorArrowWidth") || 30
+    property int selectorRadius: config.intValue("selectorRadius") || 0
+    property int containerWidth: parent ? parent.width : 0
+    
+    anchors.horizontalCenter: parent.horizontalCenter
+    
     // Left arrow button
     Rectangle {
-        width: 30
-        height: 35
+        width: root.arrowWidth
+        height: root.selectorHeight
+        radius: root.selectorRadius
         color: config.stringValue("selectorBackground") || '#000000'
 
         Text {
@@ -37,8 +45,9 @@ Row {
 
     // User name display
     Rectangle {
-        width: root.width - 60 - (root.spacing * 2)
-        height: 35
+        width: root.containerWidth - (root.arrowWidth * 2) - (root.spacing * 2) - 20
+        height: root.selectorHeight
+        radius: root.selectorRadius
         color: config.stringValue("selectorBackground") || '#000000'
         clip: true
 
@@ -57,8 +66,9 @@ Row {
 
     // Right arrow button
     Rectangle {
-        width: 30
-        height: 35
+        width: root.arrowWidth
+        height: root.selectorHeight
+        radius: root.selectorRadius
         color: config.stringValue("selectorBackground") || '#000000'
 
         Text {
