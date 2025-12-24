@@ -36,7 +36,7 @@ Row {
 
     // User name display
     Rectangle {
-        width: 170
+        width: root.width - 60 - (root.spacing * 2)
         height: 35
         color: config.stringValue("selectorBackground") || '#000000'
 

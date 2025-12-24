@@ -2,8 +2,6 @@ import QtQuick 2.0
 
 Rectangle {
     id: root
-    width: 250
-    height: 35
     clip: true
     antialiasing: true
     
@@ -12,6 +10,8 @@ Rectangle {
     property bool enabled: true
     
     // Config properties
+    width: config.intValue("passwordFieldWidth") || 250
+    height: config.intValue("passwordFieldHeight") || 35
     color: config.stringValue("passwordFieldBackground") || '#333333'
     radius: config.intValue("passwordFieldRadius") || 16
     border.color: root.enabled ? 
@@ -21,6 +21,7 @@ Rectangle {
         (config.intValue("passwordFieldBorderWidthActive") || 2) : 
         (config.intValue("passwordFieldBorderWidth") || 1)
     property int animationDuration: config.intValue("animationDuration") || 200
+    property int sideMargin: config.intValue("passwordFieldMargin") || 20
     
     signal loginRequested()
     
@@ -53,8 +54,8 @@ Rectangle {
     
     Item {
         anchors.fill: parent
-        anchors.leftMargin: 20
-        anchors.rightMargin: 20
+        anchors.leftMargin: root.sideMargin
+        anchors.rightMargin: root.sideMargin
         clip: true
         
         TextInput {
@@ -64,7 +65,7 @@ Rectangle {
             echoMode: TextInput.Password
             verticalAlignment: TextInput.AlignVCenter
             horizontalAlignment: TextInput.AlignHCenter
-            font.pixelSize: 16
+            font.pixelSize: config.intValue("passwordFieldFontSize") || 16
             passwordCharacter: {
                 var maskChar = config.stringValue("passwordCharacter")
                 return (maskChar && maskChar !== "") ? maskChar : "●"

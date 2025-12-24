@@ -16,7 +16,7 @@ Rectangle {
     // User selector
     Item {
         id: userSelectContainer
-        width: 230
+        width: passwordField.width
         height: mainRect.activeSelector === "user" ? 35 : 0
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: passwordField.top
@@ -29,6 +29,7 @@ Rectangle {
         
         UserSelect {
             id: userSelect
+            width: parent.width
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             opacity: mainRect.activeSelector === "user" ? 1 : 0
@@ -54,7 +55,7 @@ Rectangle {
     // Session selector
     Item {
         id: sessionSelectContainer
-        width: 230
+        width: passwordField.width
         height: mainRect.activeSelector === "session" ? 35 : 0
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: passwordField.bottom
@@ -67,6 +68,7 @@ Rectangle {
         
         SessionSelect {
             id: sessionSelect
+            width: parent.width
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             opacity: mainRect.activeSelector === "session" ? 1 : 0
