@@ -4,10 +4,14 @@ import "components"
 
 Rectangle {
     id: mainRect
-    color: '#000000'
     focus: true
     
     property string activeSelector: "password" // "password", "user", "session"
+    
+    // Config properties
+    color: config.stringValue("background") || '#000000'
+    property int animationDuration: config.intValue("animationDuration") || 200
+    property int elementSpacing: config.intValue("elementSpacing") || 15
     
     // User selector
     Item {
@@ -16,11 +20,11 @@ Rectangle {
         height: mainRect.activeSelector === "user" ? 35 : 0
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: passwordField.top
-        anchors.bottomMargin: 15
+        anchors.bottomMargin: mainRect.elementSpacing
         clip: true
         
         Behavior on height {
-            NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+            NumberAnimation { duration: mainRect.animationDuration; easing.type: Easing.OutCubic }
         }
         
         UserSelect {
@@ -31,7 +35,7 @@ Rectangle {
             visible: opacity > 0
             
             Behavior on opacity {
-                NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+                NumberAnimation { duration: mainRect.animationDuration; easing.type: Easing.OutCubic }
             }
         }
     }
@@ -54,11 +58,11 @@ Rectangle {
         height: mainRect.activeSelector === "session" ? 35 : 0
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: passwordField.bottom
-        anchors.topMargin: 15
+        anchors.topMargin: mainRect.elementSpacing
         clip: true
         
         Behavior on height {
-            NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+            NumberAnimation { duration: mainRect.animationDuration; easing.type: Easing.OutCubic }
         }
         
         SessionSelect {
@@ -69,7 +73,7 @@ Rectangle {
             visible: opacity > 0
             
             Behavior on opacity {
-                NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+                NumberAnimation { duration: mainRect.animationDuration; easing.type: Easing.OutCubic }
             }
         }
     }

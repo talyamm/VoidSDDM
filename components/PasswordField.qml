@@ -4,25 +4,32 @@ Rectangle {
     id: root
     width: 250
     height: 35
-    color: '#333333'
-    radius: 16
     clip: true
-    border.color: root.enabled ? '#aaaaaa' : '#888888'
-    border.width: root.enabled ? 2 : 1
     antialiasing: true
     
     property alias passwordInput: passwordInput
     property alias passwordText: passwordInput.text
     property bool enabled: true
     
+    // Config properties
+    color: config.stringValue("passwordFieldBackground") || '#333333'
+    radius: config.intValue("passwordFieldRadius") || 16
+    border.color: root.enabled ? 
+        (config.stringValue("passwordFieldBorderActive") || '#aaaaaa') : 
+        (config.stringValue("passwordFieldBorder") || '#888888')
+    border.width: root.enabled ? 
+        (config.intValue("passwordFieldBorderWidthActive") || 2) : 
+        (config.intValue("passwordFieldBorderWidth") || 1)
+    property int animationDuration: config.intValue("animationDuration") || 200
+    
     signal loginRequested()
     
     Behavior on border.width {
-        NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+        NumberAnimation { duration: root.animationDuration; easing.type: Easing.OutCubic }
     }
     
     Behavior on border.color {
-        ColorAnimation { duration: 200; easing.type: Easing.OutCubic }
+        ColorAnimation { duration: root.animationDuration; easing.type: Easing.OutCubic }
     }
     
     // Subtle glow effect when selected
@@ -36,11 +43,11 @@ Rectangle {
         antialiasing: true
         
         Behavior on opacity {
-            NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+            NumberAnimation { duration: root.animationDuration; easing.type: Easing.OutCubic }
         }
         
         Behavior on border.width {
-            NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+            NumberAnimation { duration: root.animationDuration; easing.type: Easing.OutCubic }
         }
     }
     
@@ -53,12 +60,15 @@ Rectangle {
         TextInput {
             id: passwordInput
             anchors.fill: parent
-            color: "#c4c4c4"
+            color: config.stringValue("textColor") || "#c4c4c4"
             echoMode: TextInput.Password
             verticalAlignment: TextInput.AlignVCenter
             horizontalAlignment: TextInput.AlignHCenter
             font.pixelSize: 16
-            passwordCharacter: "●"
+            passwordCharacter: {
+                var maskChar = config.stringValue("passwordCharacter")
+                return (maskChar && maskChar !== "") ? maskChar : "●"
+            }
             selectByMouse: false
             selectionColor: "transparent"
             enabled: root.enabled

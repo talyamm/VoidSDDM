@@ -3,22 +3,24 @@ import SddmComponents 2.0
 
 Row {
     id: root
-    spacing: 20
+    
+    spacing: config.intValue("powerButtonSpacing") || 20
+    property int buttonSize: config.intValue("powerButtonSize") || 50
     
     // Shutdown button
     Rectangle {
-        width: 50
-        height: 50
+        width: root.buttonSize
+        height: root.buttonSize
         radius: width / 2
-        color: '#333333'
-        border.color: '#888888'
+        color: config.stringValue("powerButtonBackground") || '#333333'
+        border.color: config.stringValue("powerButtonBorder") || '#888888'
         border.width: 1
         antialiasing: true
         
         Text {
             text: "⏻"
-            color: "#c4c4c4"
-            font.pixelSize: 24
+            color: config.stringValue("textColor") || "#c4c4c4"
+            font.pixelSize: root.buttonSize * 0.48
             anchors.centerIn: parent
         }
         
@@ -30,18 +32,18 @@ Row {
     
     // Restart button
     Rectangle {
-        width: 50
-        height: 50
+        width: root.buttonSize
+        height: root.buttonSize
         radius: width / 2
-        color: '#333333'
-        border.color: '#888888'
+        color: config.stringValue("powerButtonBackground") || '#333333'
+        border.color: config.stringValue("powerButtonBorder") || '#888888'
         border.width: 1
         antialiasing: true
         
         Text {
             text: "↻"
-            color: "#c4c4c4"
-            font.pixelSize: 24
+            color: config.stringValue("textColor") || "#c4c4c4"
+            font.pixelSize: root.buttonSize * 0.48
             anchors.centerIn: parent
         }
         
@@ -53,18 +55,18 @@ Row {
 
     // Suspend button
     Rectangle {
-        width: 50
-        height: 50
+        width: root.buttonSize
+        height: root.buttonSize
         radius: width / 2
-        color: '#333333'
-        border.color: '#888888'
+        color: config.stringValue("powerButtonBackground") || '#333333'
+        border.color: config.stringValue("powerButtonBorder") || '#888888'
         border.width: 1
         antialiasing: true
         
         Text {
             text: "⏾"
-            color: "#c4c4c4"
-            font.pixelSize: 24
+            color: config.stringValue("textColor") || "#c4c4c4"
+            font.pixelSize: root.buttonSize * 0.48
             anchors.centerIn: parent
         }
         

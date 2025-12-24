@@ -3,21 +3,21 @@ import SddmComponents 2.0
 
 Row {
     id: root
-    spacing: 10
-    
     property int selectedIndex: userModel.lastIndex
     property string selectedUser: userRepeater.count > 0 ? userRepeater.itemAt(root.selectedIndex).userName : ""
     property alias userCount: userRepeater.count
+    
+    spacing: config.intValue("selectorSpacing") || 10
     
     // Left arrow button
     Rectangle {
         width: 30
         height: 35
-        color: '#000000'
+        color: config.stringValue("selectorBackground") || '#000000'
 
         Text {
             text: "<"
-            color: "#c4c4c4"
+            color: config.stringValue("textColor") || "#c4c4c4"
             font.pixelSize: 18
             anchors.centerIn: parent
         }
@@ -38,12 +38,12 @@ Row {
     Rectangle {
         width: 170
         height: 35
-        color: '#000000'
+        color: config.stringValue("selectorBackground") || '#000000'
 
         Text {
             id: userText
             text: root.selectedUser
-            color: "#c4c4c4"
+            color: config.stringValue("textColor") || "#c4c4c4"
             font.pixelSize: 14
             anchors.centerIn: parent
         }
@@ -53,11 +53,11 @@ Row {
     Rectangle {
         width: 30
         height: 35
-        color: '#000000'
+        color: config.stringValue("selectorBackground") || '#000000'
 
         Text {
             text: ">"
-            color: "#c4c4c4"
+            color: config.stringValue("textColor") || "#c4c4c4"
             font.pixelSize: 18
             anchors.centerIn: parent
         }
