@@ -18,7 +18,8 @@ Row {
         Text {
             text: "<"
             color: config.stringValue("textColor") || "#c4c4c4"
-            font.pixelSize: 18
+            font.pixelSize: config.intValue("selectorArrowFontSize") || 18
+            font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
             anchors.centerIn: parent
         }
 
@@ -39,13 +40,18 @@ Row {
         width: root.width - 60 - (root.spacing * 2)
         height: 35
         color: config.stringValue("selectorBackground") || '#000000'
+        clip: true
 
         Text {
             id: userText
             text: root.selectedUser
             color: config.stringValue("textColor") || "#c4c4c4"
-            font.pixelSize: 14
-            anchors.centerIn: parent
+            font.pixelSize: config.intValue("selectorFontSize") || 14
+            font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
+            anchors.fill: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            elide: Text.ElideRight
         }
     }
 
@@ -58,7 +64,8 @@ Row {
         Text {
             text: ">"
             color: config.stringValue("textColor") || "#c4c4c4"
-            font.pixelSize: 18
+            font.pixelSize: config.intValue("selectorArrowFontSize") || 18
+            font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
             anchors.centerIn: parent
         }
 

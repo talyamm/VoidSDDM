@@ -66,6 +66,8 @@ Rectangle {
             verticalAlignment: TextInput.AlignVCenter
             horizontalAlignment: TextInput.AlignHCenter
             font.pixelSize: config.intValue("passwordFieldFontSize") || 16
+            font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
+            font.letterSpacing: config.intValue("passwordFieldLetterSpacing") || 2
             passwordCharacter: {
                 var maskChar = config.stringValue("passwordCharacter")
                 return (maskChar && maskChar !== "") ? maskChar : "●"

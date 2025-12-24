@@ -21,6 +21,7 @@ Row {
             text: "⏻"
             color: config.stringValue("textColor") || "#c4c4c4"
             font.pixelSize: root.buttonSize * 0.48
+            font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
             anchors.centerIn: parent
         }
         
@@ -44,6 +45,7 @@ Row {
             text: "↻"
             color: config.stringValue("textColor") || "#c4c4c4"
             font.pixelSize: root.buttonSize * 0.48
+            font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
             anchors.centerIn: parent
         }
         
@@ -67,6 +69,7 @@ Row {
             text: "⏾"
             color: config.stringValue("textColor") || "#c4c4c4"
             font.pixelSize: root.buttonSize * 0.48
+            font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
             anchors.centerIn: parent
         }
         
