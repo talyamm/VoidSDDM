@@ -6,9 +6,13 @@ Row {
     
     spacing: config.intValue("powerButtonSpacing") || 20
     property int buttonSize: config.intValue("powerButtonSize") || 50
-    property int activeButton: -1 // -1 = none, 0 = shutdown, 1 = restart, 2 = suspend
+    property int activeButton: -1 // -1 = none, 0 = shutdown, 1 = restart, 2 = suspend (from keyboard)
+    property int hoveredButton: -1 // -1 = none, 0 = shutdown, 1 = restart, 2 = suspend (from mouse)
     property bool fadeInComplete: true
     property int fadeInDuration: 300
+    
+    // Effective active button: hover takes priority over keyboard
+    property int effectiveActiveButton: hoveredButton !== -1 ? hoveredButton : activeButton
     
     opacity: root.fadeInComplete ? 1 : 0
     
@@ -23,8 +27,8 @@ Row {
         height: root.buttonSize
         radius: width / 2
         color: config.stringValue("powerButtonBackground") || '#333333'
-        border.color: root.activeButton === 0 ? (config.stringValue("powerButtonBorderActive") || config.stringValue("passwordFieldBorderActive") || '#aaaaaa') : (config.stringValue("powerButtonBorder") || '#888888')
-        border.width: root.activeButton === 0 ? 2 : 1
+        border.color: root.effectiveActiveButton === 0 ? (config.stringValue("powerButtonBorderActive") || config.stringValue("passwordFieldBorderActive") || '#aaaaaa') : (config.stringValue("powerButtonBorder") || '#888888')
+        border.width: root.effectiveActiveButton === 0 ? 2 : 1
         antialiasing: true
         
         Behavior on border.width {
@@ -45,6 +49,9 @@ Row {
         
         MouseArea {
             anchors.fill: parent
+            hoverEnabled: true
+            onEntered: root.hoveredButton = 0
+            onExited: root.hoveredButton = -1
             onClicked: sddm.powerOff()
         }
     }
@@ -56,8 +63,8 @@ Row {
         height: root.buttonSize
         radius: width / 2
         color: config.stringValue("powerButtonBackground") || '#333333'
-        border.color: root.activeButton === 1 ? (config.stringValue("powerButtonBorderActive") || config.stringValue("passwordFieldBorderActive") || '#aaaaaa') : (config.stringValue("powerButtonBorder") || '#888888')
-        border.width: root.activeButton === 1 ? 2 : 1
+        border.color: root.effectiveActiveButton === 1 ? (config.stringValue("powerButtonBorderActive") || config.stringValue("passwordFieldBorderActive") || '#aaaaaa') : (config.stringValue("powerButtonBorder") || '#888888')
+        border.width: root.effectiveActiveButton === 1 ? 2 : 1
         antialiasing: true
         
         Behavior on border.width {
@@ -78,6 +85,9 @@ Row {
         
         MouseArea {
             anchors.fill: parent
+            hoverEnabled: true
+            onEntered: root.hoveredButton = 1
+            onExited: root.hoveredButton = -1
             onClicked: sddm.reboot()
         }
     }
@@ -89,8 +99,8 @@ Row {
         height: root.buttonSize
         radius: width / 2
         color: config.stringValue("powerButtonBackground") || '#333333'
-        border.color: root.activeButton === 2 ? (config.stringValue("powerButtonBorderActive") || config.stringValue("passwordFieldBorderActive") || '#aaaaaa') : (config.stringValue("powerButtonBorder") || '#888888')
-        border.width: root.activeButton === 2 ? 2 : 1
+        border.color: root.effectiveActiveButton === 2 ? (config.stringValue("powerButtonBorderActive") || config.stringValue("passwordFieldBorderActive") || '#aaaaaa') : (config.stringValue("powerButtonBorder") || '#888888')
+        border.width: root.effectiveActiveButton === 2 ? 2 : 1
         antialiasing: true
         
         Behavior on border.width {
@@ -111,6 +121,9 @@ Row {
         
         MouseArea {
             anchors.fill: parent
+            hoverEnabled: true
+            onEntered: root.hoveredButton = 2
+            onExited: root.hoveredButton = -1
             onClicked: sddm.suspend()
         }
     }

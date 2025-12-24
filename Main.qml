@@ -35,6 +35,9 @@ Rectangle {
     property bool showPreview: config.boolValue("showSelectorPreview") || false
     property bool showHelpTips: config.boolValue("showHelpTips") || false
     property bool showCapsLockIndicator: config.boolValue("showCapsLockIndicator") || false
+    property bool allowEmptyPassword: config.boolValue("allowEmptyPassword") || false
+    property int passwordFieldOffsetX: config.intValue("passwordFieldOffsetX") || 0
+    property int passwordFieldOffsetY: config.intValue("passwordFieldOffsetY") || 0
     
     // Fade-in animation state
     property bool fadeInComplete: false
@@ -50,7 +53,7 @@ Rectangle {
         color: config.stringValue("selectorPreviewColor") || "#666666"
         font.pixelSize: config.intValue("selectorPreviewFontSize") || 11
         font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenter: passwordField.horizontalCenter
         anchors.bottom: passwordField.top
         anchors.bottomMargin: config.intValue("selectorPreviewMargin") || 10
         visible: mainRect.showPreview && mainRect.activeSelector !== "user" && userSelect.selectedUser !== ""
@@ -66,7 +69,7 @@ Rectangle {
         id: userSelectContainer
         width: passwordField.width
         height: mainRect.activeSelector === "user" ? (config.intValue("selectorHeight") || 35) : 0
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenter: passwordField.horizontalCenter
         anchors.bottom: passwordField.top
         anchors.bottomMargin: mainRect.elementSpacing
         clip: true
@@ -112,13 +115,23 @@ Rectangle {
     // Password field
     PasswordField {
         id: passwordField
-        anchors.centerIn: parent
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenterOffset: mainRect.passwordFieldOffsetX
+        anchors.verticalCenterOffset: mainRect.passwordFieldOffsetY
         enabled: mainRect.activeSelector === "password"
         fadeInComplete: mainRect.fadeInComplete
         fadeInDuration: mainRect.fadeInDuration
         
         onLoginRequested: {
             var savedPassword = passwordField.passwordText
+            
+            // Check if empty password is allowed
+            if (!mainRect.allowEmptyPassword && savedPassword.length === 0) {
+                // Don't attempt login with empty password
+                return
+            }
+            
             passwordField.passwordText = "" // Clear password field
             sddm.login(userSelect.selectedUser, savedPassword, sessionSelect.selectedIndex)
             
@@ -129,7 +142,7 @@ Rectangle {
     
     Timer {
         id: loginErrorTimer
-        interval: 500 // Short delay to check if login failed
+        interval: config.intValue("loginErrorDelay") || 500 // Delay to check if login failed
         onTriggered: {
             // If we're still on the login screen, assume login failed
             if (mainRect.activeSelector === "password") {
@@ -143,7 +156,7 @@ Rectangle {
         id: sessionSelectContainer
         width: passwordField.width
         height: mainRect.activeSelector === "session" ? (config.intValue("selectorHeight") || 35) : 0
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenter: passwordField.horizontalCenter
         anchors.top: passwordField.bottom
         anchors.topMargin: mainRect.elementSpacing
         clip: true
@@ -172,7 +185,7 @@ Rectangle {
         color: config.stringValue("selectorPreviewColor") || "#666666"
         font.pixelSize: config.intValue("selectorPreviewFontSize") || 11
         font.family: config.stringValue("fontFamily") || "JetBrains Mono Nerd Font"
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenter: passwordField.horizontalCenter
         anchors.top: passwordField.bottom
         anchors.topMargin: config.intValue("selectorPreviewMargin") || 10
         visible: mainRect.showPreview && mainRect.activeSelector !== "session" && sessionSelect.selectedSession !== ""
@@ -299,6 +312,18 @@ Rectangle {
                 activatePowerButton()
                 handled = true
             }
+        } else if (event.key === Qt.Key_F10) {
+            // Suspend
+            sddm.suspend()
+            handled = true
+        } else if (event.key === Qt.Key_F11) {
+            // Shutdown
+            sddm.powerOff()
+            handled = true
+        } else if (event.key === Qt.Key_F12) {
+            // Restart
+            sddm.reboot()
+            handled = true
         }
         
         if (handled) {
