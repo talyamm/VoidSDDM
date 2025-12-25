@@ -24,6 +24,9 @@ Rectangle {
     property bool clearPasswordOnError: config.boolValue("clearPasswordOnError") !== false
     property int passwordFieldOffsetX: config.intValue("passwordFieldOffsetX") || 0
     property int passwordFieldOffsetY: config.intValue("passwordFieldOffsetY") || 0
+    property bool showClock: config.boolValue("showClock") || false
+    property int clockOffsetX: config.intValue("clockOffsetX") || 0
+    property int clockOffsetY: config.intValue("clockOffsetY") || -200
     property real elementOpacity: ConfigManager.getElementOpacity(config)
     
     // Fade-in animation state
@@ -31,6 +34,16 @@ Rectangle {
     Component.onCompleted: {
         fadeInComplete = true
         passwordField.passwordInput.focus = true
+    }
+    
+    // Clock
+    Clock {
+        id: clock
+        showClock: mainRect.showClock
+        clockOffsetX: mainRect.clockOffsetX
+        clockOffsetY: mainRect.clockOffsetY
+        animationDuration: mainRect.animationDuration
+        elementOpacity: mainRect.elementOpacity
     }
     
     // Help tips
