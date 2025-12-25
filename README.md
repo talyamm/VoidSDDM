@@ -46,7 +46,6 @@ The theme includes multiple color schemes in the `configs/` folder:
 - `everforest.conf` - Everforest color scheme
 - `catppuccin.conf` - Catppuccin Mocha color scheme
 - `nord.conf` - Nord color scheme
-- `coffee.conf` - Coffee warm beige theme
 
 To switch themes, edit `metadata.desktop` and change the `ConfigFile` value:
 
