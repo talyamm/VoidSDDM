@@ -26,7 +26,7 @@ sudo nano /etc/sddm.conf
 
 ```ini
 [Theme]
-Current=voidddm
+Current=voidsddm
 ```
 
 ### Restart SDDM service:
