@@ -31,6 +31,11 @@ https://github.com/user-attachments/assets/3466105d-9b18-4c78-8c42-7708ccf43605
 <img width="334" height="169" alt="image" src="https://github.com/user-attachments/assets/22c037a4-d43b-42bb-8123-1d40e3ff2784" />
 </details>
 
+<details>
+  <summary>configs/tokyonight.conf</summary>
+<img width="328" height="203" alt="image" src="https://github.com/user-attachments/assets/37c21b4a-afb6-47dc-8874-33ddc179f3d8" />
+</details>
+
 [`Customization guide`](#Themes)
 
 ## Installation
@@ -75,6 +80,7 @@ The theme includes multiple color schemes in the `configs/` folder:
 - `everforest.conf` - Everforest color scheme
 - `catppuccin.conf` - Catppuccin Mocha color scheme
 - `nord.conf` - Nord color scheme
+- `tokyonight.conf` - Tokyo Night color scheme
 
 To switch themes, edit `metadata.desktop` and change the `ConfigFile` value:
 
