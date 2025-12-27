@@ -14,6 +14,16 @@ Rectangle {
     
     // Config properties
     color: config.stringValue("background") || '#000000'
+    property string backgroundImage: config.stringValue("backgroundImage") || ""
+    
+    // Background image
+    Image {
+        id: backgroundImageComponent
+        anchors.fill: parent
+        source: mainRect.backgroundImage
+        fillMode: Image.PreserveAspectCrop
+        visible: mainRect.backgroundImage !== ""
+    }
     property int animationDuration: config.intValue("animationDuration") || 200
     property int fadeInDuration: config.intValue("fadeInDuration") || 300
     property int elementSpacing: config.intValue("elementSpacing") || 15

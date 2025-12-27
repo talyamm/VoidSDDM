@@ -27,7 +27,7 @@ Row {
         width: root.arrowWidth
         height: root.selectorHeight
         radius: root.selectorRadius
-        color: config.stringValue("selectorBackground") || '#000000'
+        color: "transparent"
 
         Text {
             text: "<"
@@ -54,7 +54,7 @@ Row {
         width: root.containerWidth - (root.arrowWidth * 2) - (root.spacing * 2) - 20
         height: root.selectorHeight
         radius: root.selectorRadius
-        color: config.stringValue("selectorBackground") || '#000000'
+        color: "transparent"
         clip: true
 
         Text {
@@ -74,7 +74,7 @@ Row {
         width: root.arrowWidth
         height: root.selectorHeight
         radius: root.selectorRadius
-        color: config.stringValue("selectorBackground") || '#000000'
+        color: "transparent"
 
         Text {
             text: ">"
